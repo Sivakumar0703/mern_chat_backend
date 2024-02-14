@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
 const chatSchema = mongoose.Schema({
-    user : [{
+    users : [{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        ref:"users" // User // users => mongoose.model('users',userSchema)
+        // ref option is what tells Mongoose which model to use during population(populate method)
     }],
     chatLabel: {
         type:String,
@@ -12,13 +13,13 @@ const chatSchema = mongoose.Schema({
         type:Boolean,
         default:false
     },
-    lastMessage:{
+    recentMessage:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Message"
+        ref:"Messages" // Message
     },
-    Admin:{
+    admin:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        ref:"users" //User
     }
 },{timestamps:true})
 

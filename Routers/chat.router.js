@@ -1,19 +1,21 @@
 import express from 'express';
-import {user , registerUser, loginUser} from '../Controller/user.controller.js' 
-import { generateSignature } from '../Utility/cloudinary.js';
-
-
-const router = express.Router();
-
-router.get('/',user)
-router.post('/register-user',registerUser)
-router.post('/login',loginUser)
-
-// cloudinary
-router.post('/sign-upload',generateSignature)
+import { protect } from '../Middleware/auth.middleware.js';
+import { createGroup, getAllChat, oneToOneChat } from '../Controller/chat.controller.js';
 
 
 
+const chatRouter = express.Router();
+
+chatRouter.post('/',protect,oneToOneChat);
+chatRouter.get('/',protect,getAllChat);
+chatRouter.post('/group',protect,createGroup );
+// chatRouter.put('/group/rename',protect,renameGroupChat);
+// chatRouter.put('/group/add_user',protect,addUserFromGroup);
+// chatRouter.put('/group/remove_user',protect,removeUserFromGroup);
 
 
-export default router
+
+
+
+
+export default chatRouter
