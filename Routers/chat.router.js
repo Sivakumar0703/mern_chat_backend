@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../Middleware/auth.middleware.js';
-import { createGroup, getAllChat, oneToOneChat } from '../Controller/chat.controller.js';
+import { addGroupMembers, createGroup, getAllChat, oneToOneChat, removeGroupMember, renameGroupChat } from '../Controller/chat.controller.js';
 
 
 
@@ -8,10 +8,10 @@ const chatRouter = express.Router();
 
 chatRouter.post('/',protect,oneToOneChat);
 chatRouter.get('/',protect,getAllChat);
-chatRouter.post('/group',protect,createGroup );
-// chatRouter.put('/group/rename',protect,renameGroupChat);
-// chatRouter.put('/group/add_user',protect,addUserFromGroup);
-// chatRouter.put('/group/remove_user',protect,removeUserFromGroup);
+chatRouter.post('/create_group',protect,createGroup );
+chatRouter.put('/group_rename',protect,renameGroupChat);
+chatRouter.put('/group_add_member',protect,addGroupMembers);
+chatRouter.put('/group_remove_member',protect,removeGroupMember);
 
 
 

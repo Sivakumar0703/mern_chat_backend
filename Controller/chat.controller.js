@@ -1,5 +1,4 @@
 import Chat from "../Model/chat.model.js";
-// import Message from "../Model/message.model.js";
 import User from "../Model/user.model.js";
  
 
@@ -36,7 +35,7 @@ export const oneToOneChat = async(req,res) => {
           return  res.status(200).send(chat[0]) // no chats available => first time chat
        } else {
          let chatData = {
-            chatLabel: "sender", // chatName
+            groupName: "sender", // chatName
             isGroupChat : false ,
             users : [req.user._id,userId]
          }
@@ -56,7 +55,7 @@ export const oneToOneChat = async(req,res) => {
        }
 }
 
-export const getAllChat = async(req,res) => {
+export const getAllChat = async(req,res) => { 
         try {
             //  Chat.findOne({users:req.user._id}).then(result => res.send(result))
              await Chat.find({users:{$elemMatch : {$eq : req.user._id}}})
@@ -79,7 +78,7 @@ export const getAllChat = async(req,res) => {
 }
 
 export const createGroup = async(req,res) => {
-    if(!req.body.users || !req.body.name){
+    if(!req.body.users || !req.body.groupName){
         return res.status(400).send({message:"please fill all the fields"})
     }
 
@@ -94,7 +93,7 @@ export const createGroup = async(req,res) => {
     try {
        const group = await Chat.create({
         users:users,
-        chatLabel:req.body.chatLabel, // name
+        groupName:req.body.groupName, // name
         isGroupChat:true,
         admin:req.user
        }) ;
@@ -108,4 +107,54 @@ export const createGroup = async(req,res) => {
     }
 
 
+}
+
+export const renameGroupChat = async(req,res) => { // check admin can only change group name
+    const {groupChatId , groupName} = req.body;
+    try {
+        const rename = await Chat.findByIdAndUpdate(groupChatId , {groupName} , {new:true})
+        .populate("users","-password")
+        .populate("admin","-password");
+
+        if(!rename){
+            return res.status(400).json({message:"group not found"})
+        } 
+        res.status(200).json({message:"group name changed successfully",rename})
+    } catch (error) {
+        res.status(500).json({message:"error in renaming group chat",error})
+    }
+}
+
+export const addGroupMembers = async(req,res) => {
+    const {groupChatId , userId} = req.body;
+    try {
+       const addUser = await Chat.findByIdAndUpdate(groupChatId , {$push:{users:userId}},{new:true}) 
+       .populate("users","-password")
+       .populate("admin" , "-password")
+
+       if(!addUser){
+        return res.status(400).json({message:"group/user not found"})
+       }
+
+       res.status(400).json({message:"new group member added successfully",groupChat:addUser})
+    } catch (error) {
+        res.status(500).json({message:"error in adding new group members",error})
+    }
+}
+
+export const removeGroupMember = async(req,res) => {
+    const{groupChatId , userId} = req.body;
+    try {
+       const removeUser = await Chat.findByIdAndUpdate(groupChatId , {$pull : {users:userId}} , {new:true})
+       .populate("users","-password")
+       .populate("admin","-password") 
+
+       if(!removeUser){
+        return res.status(400).json({message:"user/chat not found"})
+       }
+
+       res.status(200).json({message:"removed user from group chat" , afterRemoved:removeUser})
+    } catch (error) {
+        res.status(500).json({message:"error in removing user" })
+    }
 }

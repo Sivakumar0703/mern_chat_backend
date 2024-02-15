@@ -6,7 +6,7 @@ const chatSchema = mongoose.Schema({
         ref:"users" // User // users => mongoose.model('users',userSchema)
         // ref option is what tells Mongoose which model to use during population(populate method)
     }],
-    chatLabel: {
+    groupName: {
         type:String,
     },
     isGroupChat:{
