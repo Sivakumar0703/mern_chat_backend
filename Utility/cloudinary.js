@@ -16,6 +16,7 @@ export const generateSignature = (req,res) => {
         timestamp,
         folder
        },process.env.API_SECRET) ;
+       console.log(" ☁️ cloudinary" , signature)
        res.status(200).json({timestamp,signature,message:"successfully signature generated"})
     } catch (error) {
         res.status(500).json({message:"Internal Server Error in signature generation backend"})

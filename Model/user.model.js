@@ -16,8 +16,23 @@ password :{
 },
 image :{
     type:String,
-    default:"https://drive.google.com/file/d/1phmYV3dNnLB803sKf4hW3BWzMsH_iSb4/view?usp=drive_link"
+    default:"https://res.cloudinary.com/sivakumar/image/upload/v1709532026/images/vyondxm5pswy7ivi0npn.jpg"
 },
+isVerified : {
+    type : Boolean,
+    default : false
+},
+token:{
+    type:String
+},
+verification : {
+    type : String,
+    default : null
+},
+notification:{
+    type:Array,
+    default:[]
+}
 },{timestamp:true})
 
 const User = mongoose.model('users',userSchema);

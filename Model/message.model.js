@@ -9,11 +9,22 @@ content:{
     type:String,
     trim:true
 },
+isMedia:{
+    type:Boolean,
+    default : false
+},
+mediaType:{
+    type:String,
+    default: "text"
+},
 chat:{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"Chat"
+    ref:"chats" //Chat
+},
+msgSentTime:{
+    type:String
 }
 },{timestamp:true})
 
-const Message = mongoose.model('Messages',messageSchema);
+const Message = mongoose.model('messages',messageSchema);
 export default Message
